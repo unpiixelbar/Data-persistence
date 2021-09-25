@@ -18,10 +18,15 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        if (HighScoreManager.Instance != null)
+        {
+            HighScoreManager.Instance.SetHighScore(UIMenu.Instance.highscorePlayer, UIMenu.Instance.HighScorePoints);
+        }
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -70,6 +75,14 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        if(m_Points > UIMenu.Instance.HighScorePoints)
+        {
+            UIMenu.Instance.HighScorePoints = m_Points;
+            UIMenu.Instance.highscorePlayer = UIMenu.Instance.playername;
+            UIMenu.Instance.Save();
+            HighScoreManager.Instance.SetHighScore(UIMenu.Instance.highscorePlayer, UIMenu.Instance.HighScorePoints);
+        }
+        
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
